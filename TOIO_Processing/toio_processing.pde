@@ -9,6 +9,8 @@ int cubesPerHost = 12;
 int maxMotorSpeed = 115;
 int xOffset;
 int yOffset;
+int xOffset2;
+int yOffset2;
 
 //// Instruction for Windows Users  (Feb 2. 2025) ////
 // 1. Enable WindowsMode and set nCubes to the exact number of toio you are connecting.
@@ -21,6 +23,7 @@ boolean WindowsMode = false; //When you enable this, it will check for connectio
 int framerate = 30;
 
 int[] matDimension = {45, 45, 455, 455};
+int[] matDimension2 = {45, 45, 455, 455};
 
 
 //for OSC
@@ -50,6 +53,8 @@ void setup() {
 
   xOffset = matDimension[0] - 45;
   yOffset = matDimension[1] - 45;
+  xOffset2 = matDimension2[0] - 545;
+  yOffset2 = matDimension2[1] - 45;
 
   //do not send TOO MANY PACKETS
   //we'll be updating the cubes every frame, so don't try to go too high
@@ -68,6 +73,7 @@ void draw() {
   //draw the "mat"
   fill(255);
   rect(matDimension[0] - xOffset, matDimension[1] - yOffset, matDimension[2] - matDimension[0], matDimension[3] - matDimension[1]);
+  rect(matDimension2[0] - xOffset2, matDimension2[1] - yOffset2, matDimension2[2] - matDimension2[0], matDimension2[3] - matDimension2[1]);
 
   //draw the cubes
   pushMatrix();
