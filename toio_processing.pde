@@ -1,7 +1,6 @@
 import oscP5.*;
 import netP5.*;
 
-
 //constants
 //The soft limit on how many toios a laptop can handle is in the 10-12 range
 //the more toios you connect to, the more difficult it becomes to sustain the connection
@@ -60,8 +59,6 @@ void setup() {
   }
 }
 
-
-
 void draw() {
   //START TEMPLATE/DEBUG VIEW
   background(255);
@@ -96,4 +93,22 @@ void draw() {
   //END TEMPLATE/DEBUG VIEW
   
   //INSERT YOUR CODE HERE!
+  
+  // Version 1: setting radius size and speed manually (speed is orbital period in milli sec)
+  moveCircle(cubes[0], 250, 250, 80, 10000);
+  
+  // Version 2: setting radius size based on placed position, and speed manually (make sure to modify mat center in onPositionUpdate in Cube class)
+  /*int radius = (int) cubes[0].radius;
+  moveCircle(cubes[0], 250, 250, radius, 10000);*/
+}
+
+
+// helper function to move toio in a circle
+void moveCircle(Cube cube, int centerX, int centerY, int radius, float orbitalPeriod) {
+  float angle = (millis() % orbitalPeriod) / orbitalPeriod * TWO_PI;
+
+  int targetX = centerX + (int)(radius * cos(angle));
+  int targetY = centerY + (int)(radius * sin(angle));
+
+  cube.velocityTarget(targetX, targetY);
 }

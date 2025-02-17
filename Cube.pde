@@ -18,6 +18,8 @@ class Cube {
   int velocityY;
   int velocityTime;
   
+  float radius = -1;
+  
   // battery
   int battery;
   
@@ -68,7 +70,13 @@ class Cube {
     y = upy;
     theta = uptheta; 
     
-    //insert code here
+    if (!isActive) {
+      radius = -1;
+    }
+    
+    if (radius == -1) {
+      radius = dist(x, y, 250, 250);
+    }
     
     lastUpdate = System.currentTimeMillis();
     isActive = true;
