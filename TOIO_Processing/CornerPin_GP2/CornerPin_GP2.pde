@@ -45,6 +45,9 @@ int smallSize;
 int mediumSize;
 int largeSize;
 
+// Fonts
+PFont basicFont;
+
 // Mode
 int mode;
 
@@ -77,6 +80,8 @@ void setup() {
   mediumSize = 65; // scaled
   largeSize = 75; // scaled
   
+  basicFont = createFont("Courier", 30); 
+  
   mode = 1;
 }
 
@@ -93,15 +98,46 @@ void draw() {
   offscreen.rect(xoffset2,yoffset2,sideLength,sideLength);
   
   // Right Board (Orbit)
+    // bottom bar
   offscreen.fill(lightGrey);
   offscreen.rect(xoffset2, yoffset2+(sideLength*4/5), sideLength, sideLength*1/5);
   offscreen.fill(mediumGrey);
+    // planet spots
   offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
   offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
   offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
   offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10, mediumSize, mediumSize);
   offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.ellipse(xoffset2+332.659090706, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.fill(lightGrey);
+  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10+10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10+10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10+10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10+10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10+10, largeSize, largeSize);
+  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10+10, largeSize, largeSize);
+  offscreen.noFill();
+  offscreen.stroke(mediumGrey);
+  offscreen.strokeWeight(2);
+  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.noStroke();
+  offscreen.fill(255);
+  offscreen.rect(xoffset2, yoffset2+410, sideLength, 45);
+    // labels 
+  offscreen.fill(mediumGrey);
+  offscreen.textFont(basicFont);
+  offscreen.textAlign(CENTER, CENTER);
+  offscreen.text("S",xoffset2+30.749999981, yoffset2+sideLength*9/10);
+  offscreen.text("S",xoffset2+89.268181764, yoffset2+sideLength*9/10);
+  offscreen.text("M",xoffset2+152.445454453, yoffset2+sideLength*9/10);
+  offscreen.text("M",xoffset2+220.281818048, yoffset2+sideLength*9/10);
+  offscreen.text("L",xoffset2+292.777272549, yoffset2+sideLength*9/10);
+  offscreen.text("L",xoffset2+369.931817956, yoffset2+sideLength*9/10);
   
   // Left Board (Control)
   offscreen.fill(mediumGrey);
