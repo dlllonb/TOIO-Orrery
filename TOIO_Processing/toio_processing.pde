@@ -167,8 +167,8 @@ void setup() {
   basicFont = createFont("Courier", 30);
   basicfontSmall = createFont("Courier", 15);
   
-  starsRect = loadImage("space_background_fourtofive.jpg");
-  starsRect.resize(410, 328);
+  starsRect = loadImage("space_background.jpg");
+  starsRect.resize(410, 410);
   starsCirc = loadImage("space_background_circle.png");
   starsCirc.resize(132, 132);
   orangeDial = loadImage("orange_dial.png");
@@ -184,6 +184,7 @@ void setup() {
   tealCirc = loadImage("teal_circle_hatched.png");
   tealCirc.resize(75, 75);
   
+  // for changing between sandbox and exploration - explore mode is 0 and sandbox is 1
   mode = 0;
   
 }
@@ -286,46 +287,12 @@ void draw() {
   offscreen.image(starsRect,xoffset2,yoffset2); 
   
   // Right Board (Orbit)
-    // bottom bar
-  offscreen.fill(lightGrey);
-  offscreen.rect(xoffset2, yoffset2+(sideLength*4/5), sideLength, sideLength*1/5);
-  // planet spots
+  noStroke();
   offscreen.fill(mediumGrey);
-  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.fill(lightGrey);
-  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10+10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10+10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10+10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10+10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10+10, largeSize, largeSize);
-  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10+10, largeSize, largeSize);
-  offscreen.noFill();
-  offscreen.stroke(mediumGrey);
-  offscreen.strokeWeight(2);
-  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.ellipse(xoffset2+369.931817956, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.noStroke();
-  offscreen.fill(255);
-  offscreen.rect(xoffset2, yoffset2+410, sideLength, 45);
-    // labels 
-  offscreen.fill(mediumGrey);
-  offscreen.textFont(basicFont);
-  offscreen.textAlign(CENTER, CENTER);
-  offscreen.text("S",xoffset2+30.749999981, yoffset2+sideLength*9/10);
-  offscreen.text("S",xoffset2+89.268181764, yoffset2+sideLength*9/10);
-  offscreen.text("M",xoffset2+152.445454453, yoffset2+sideLength*9/10);
-  offscreen.text("M",xoffset2+220.281818048, yoffset2+sideLength*9/10);
-  offscreen.text("L",xoffset2+292.777272549, yoffset2+sideLength*9/10);
-  offscreen.text("L",xoffset2+369.931817956, yoffset2+sideLength*9/10);
+  offscreen.ellipse(xoffset2+sideLength*1/12, yoffset2+sideLength*1/12, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+sideLength*1/12, yoffset2+sideLength*11/12, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+sideLength*11/12, yoffset2+sideLength*1/12, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+sideLength*11/12, yoffset2+sideLength*11/12, smallSize, smallSize);
   
   // Left Board (Control)
   offscreen.fill(mediumGrey);
