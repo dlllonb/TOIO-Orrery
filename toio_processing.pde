@@ -4,7 +4,7 @@ import netP5.*;
 //constants
 //The soft limit on how many toios a laptop can handle is in the 10-12 range
 //the more toios you connect to, the more difficult it becomes to sustain the connection
-int nCubes = 2;
+int nCubes = 8;
 int cubesPerHost = 12;
 int maxMotorSpeed = 115;
 int xOffset;

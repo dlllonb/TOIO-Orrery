@@ -18,6 +18,43 @@ int rocketBoxY1 = 100;
 int rocketBoxX2 = 150;
 int rocketBoxY2 = 160;
 
+// dial 1 box coords
+int dial1BoxX1 = 10;
+int dial1BoxY1 = 300;
+int dial1BoxX2 = 20;
+int dial1BoxY2 = 290;
+
+// dial 2 box coords
+int dial1BoxX1 = 30;
+int dial1BoxY1 = 300;
+int dial1BoxX2 = 40;
+int dial1BoxY2 = 290;
+
+// dial 3 box coords
+int dial1BoxX1 = 50;
+int dial1BoxY1 = 300;
+int dial1BoxX2 = 60;
+int dial1BoxY2 = 290;
+
+// variable controlled by dial
+// 0: temperature, 1: type of planet, 2: eccentricity
+int dialVariable = 0;
+
+// previous dial position on slider
+int prevSliderX = -1;
+
+// slider box coords
+int sliderBoxX1 = 10;
+int sliderBoxY1 = 450;
+int sliderBoxX2 = 300;
+int sliderBoxY3 = 350;
+
+// is slider toio being used to choose a System
+boolean choosingSystems = false;
+
+// the system currently being shown
+int currSystem = -1;
+
 // center of orbit (ie. sun) coords
 int sunX = 250;
 int sunY = 250;
@@ -160,6 +197,34 @@ void draw() {
       moveCircle(cubes[i], sunX, sunY, 80, 10000);
     }
   }
+
+  // changing systems and variables with the dial
+  // assuming cubes[1] is the dial
+  Cube dial = cubes[1];
+
+  // case when dial is working as a slider to choose a system to display
+  if (!choosingSystems) {
+    // check if dial in slider box if not choosing systems
+    if (SliderInBox(Cube slider)) {
+        choosingSystems = true;
+    }
+  } else {
+    // check if dial has been moved
+    if (slider.x != prevSliderX) {
+      isSimulationPaused = true;
+      // wait to make sure the slider is done being moved
+      /* while (slider.x != prevSliderX) {
+        prevSliderX = slider.x;
+        Thread.sleep(1000);
+      } */
+      // update system being displayed
+      chosenSystem = slider.x % 50;
+      if (chosenSystem != currSystem) {
+        currSystem = chosenSystem;
+        setSystem(currSystem);
+      }
+    }
+  }
 }
 
 
@@ -178,4 +243,27 @@ boolean RocketInBox(Cube rocket) {
   return (rocket.x >= rocketBoxX1 && rocket.x <= rocketBoxX2 &&
           rocket.y >= rocketBoxY1 && rocket.y <= rocketBoxY2 &&
           rocket.isActive);
+}
+
+// helper function to determine if slider in box
+boolean SliderInBox(Cube dial) {
+  return (slider.x >= sliderBoxX1 && slider.x <= sliderBoxX2 &&
+          slider.y >= sliderBoxY1 && slider.y <= sliderBoxY2 &&
+          slider.isActive);
+}
+
+// helper function to determine which option the dial is pointing to
+int dialChoice(Cube dial) {
+  return (dial.theta % 30);
+}
+
+// helper function to display a system
+void setSystem(chosenSystem) {
+  // get the system's data
+
+  // set the projection
+
+  // start the orbits
+  
+  isSimulationPaused = false;
 }
