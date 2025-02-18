@@ -51,6 +51,9 @@ PFont basicFont;
 // Images
 PImage starsRect;
 PImage starsCirc;
+PImage orangeDial;
+PImage greyDial;
+PImage tealDial;
 
 // Mode
 int mode;
@@ -90,6 +93,12 @@ void setup() {
   starsRect.resize(410, 328);
   starsCirc = loadImage("../space_background_circle.png");
   starsCirc.resize(132, 132);
+  orangeDial = loadImage("../orange_dial.png");
+  orangeDial.resize(116, 84);
+  greyDial = loadImage("../grey_dial.png");
+  greyDial.resize(116, 84);
+  tealDial = loadImage("../teal_dial.png");
+  tealDial.resize(116, 84);
   
   mode = 1;
 }
@@ -158,16 +167,24 @@ void draw() {
   } else if (mode == 1) {
     // SANDBOX MODE
     // dial boxes
-    offscreen.fill(mediumGrey);
-    offscreen.rect(xoffset1+sideLength*1/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
-    offscreen.rect(xoffset1+sideLength*9/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
-    offscreen.rect(xoffset1+sideLength*17/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
-    offscreen.ellipse(xoffset1+sideLength*1/6, yoffset2+sideLength*19/42, 50, 50);
-    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset2+sideLength*19/42, 50, 50);
-    offscreen.ellipse(xoffset1+sideLength*5/6, yoffset2+sideLength*19/42, 50, 50);
-    offscreen.fill(darkGrey);
-    offscreen.arc(100, 100, 100, 100, 0, 180);
-    //offscreen.arc(xoffset1+sideLength*1/6, yoffset1+sideLength*18/42, 100, 100, PI, 0);
+    //offscreen.fill(mediumGrey);
+    //offscreen.rect(xoffset1+sideLength*1/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
+    //offscreen.rect(xoffset1+sideLength*9/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
+    //offscreen.rect(xoffset1+sideLength*17/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
+    //offscreen.fill(darkGrey);
+    //offscreen.arc(xoffset1+sideLength*1/6, yoffset1+sideLength*19/42, 80, 80, PI, PI*2);
+    //offscreen.arc(xoffset1+sideLength*1/2, yoffset1+sideLength*19/42, 80, 80, PI, PI*2);
+    //offscreen.arc(xoffset1+sideLength*5/6, yoffset1+sideLength*19/42, 80, 80, PI, PI*2);
+    //offscreen.fill(mediumGrey);
+    //offscreen.ellipse(xoffset1+sideLength*1/6, yoffset2+sideLength*19/42, 50, 50);
+    //offscreen.ellipse(xoffset1+sideLength*1/2, yoffset2+sideLength*19/42, 50, 50);
+    //offscreen.ellipse(xoffset1+sideLength*5/6, yoffset2+sideLength*19/42, 50, 50);
+    offscreen.image(orangeDial,xoffset1+sideLength*1/24,yoffset1+sideLength*2/7); 
+    offscreen.image(greyDial,xoffset1+sideLength*9/24,yoffset1+sideLength*2/7); 
+    offscreen.image(tealDial,xoffset1+sideLength*17/24,yoffset1+sideLength*2/7); 
+    
+
+    
     // window
     offscreen.fill(mediumGrey);
     offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*2.35, largeSize*2.35);
