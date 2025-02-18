@@ -12,6 +12,23 @@ int yOffset;
 int xOffset2;
 int yOffset2;
 
+// rocket box coords
+int rocketBoxX1 = 90;
+int rocketBoxY1 = 100;
+int rocketBoxX2 = 150;
+int rocketBoxY2 = 160;
+
+// center of orbit (ie. sun) coords
+int sunX = 250;
+int sunY = 250;
+
+// simulation paused or playing variable
+boolean isSimulationPaused = false;
+
+// images of planet info
+PImage planetImage; // just a singular image for now, but will be list of list of images in final version?
+
+
 //// Instruction for Windows Users  (Feb 2. 2025) ////
 // 1. Enable WindowsMode and set nCubes to the exact number of toio you are connecting.
 // 2. Run Processing Code FIRST, Then Run the Rust Code. After running the Rust Code, you should place the toio on the toio mat, then Processing should start showing the toio position.
@@ -62,6 +79,9 @@ void setup() {
   if(WindowsMode){
   check_connection();
   }
+  
+  // loads the planet info image
+  planetImage = loadImage("space_background_circle.png"); // just one image for now
 }
 
 void draw() {
@@ -100,16 +120,50 @@ void draw() {
   
   //INSERT YOUR CODE HERE!
   
+  // example usage for moving toio in circle
   // Version 1: setting radius size and speed manually (speed is orbital period in milli sec)
-  moveCircle(cubes[0], 250, 250, 80, 10000);
-  
+  /*moveCircle(cubes[0], 250, 250, 80, 10000);
   // Version 2: setting radius size based on placed position, and speed manually (make sure to modify mat center in onPositionUpdate in Cube class)
-  /*int radius = (int) cubes[0].radius;
+  int radius = (int) cubes[0].radius;
   moveCircle(cubes[0], 250, 250, radius, 10000);*/
+  
+  // rocket pausing & info display part (kind of skeleton code for now)
+  // assuming cubes[0] is the rocket
+  Cube rocket = cubes[0];
+  
+  // check if the rocket is in its box and is active
+  if (RocketInBox(rocket)) {
+    print("yes");
+    isSimulationPaused = false;
+  // case for if rocket is not in box or is not active
+  } else {
+    isSimulationPaused = true;
+
+    // check if the rocket is near a planet
+    boolean isNearPlanet = false;
+    for (int i = 1; i < nCubes; i++) {
+      Cube planet = cubes[i];
+      if (rocket.distance(planet.x, planet.y) < 50) {
+        isNearPlanet = true;
+        image(planetImage, sunX, sunY);
+        break;
+      }
+    }
+    if (!isNearPlanet) {
+      clear();
+    }
+  }
+
+  // case for when rocket is in box (simulation resumes normally)
+  if (!isSimulationPaused) {
+    for (int i = 1; i < nCubes; i++) {
+      moveCircle(cubes[i], sunX, sunY, 80, 10000);
+    }
+  }
 }
 
 
-// helper function to move toio in a circle
+// helper function to move toio in  circle
 void moveCircle(Cube cube, int centerX, int centerY, int radius, float orbitalPeriod) {
   float angle = (millis() % orbitalPeriod) / orbitalPeriod * TWO_PI;
 
@@ -117,4 +171,11 @@ void moveCircle(Cube cube, int centerX, int centerY, int radius, float orbitalPe
   int targetY = centerY + (int)(radius * sin(angle));
 
   cube.velocityTarget(targetX, targetY);
+}
+
+// helper function to determine if rocket is in box
+boolean RocketInBox(Cube rocket) {
+  return (rocket.x >= rocketBoxX1 && rocket.x <= rocketBoxX2 &&
+          rocket.y >= rocketBoxY1 && rocket.y <= rocketBoxY2 &&
+          rocket.isActive);
 }
