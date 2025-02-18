@@ -100,9 +100,9 @@ PImage tealCirc;
 // Mode
 int mode;
 
-void settings() {
-  size(1000, 1000);
-}
+//void settings() {
+//  size(1000, 1000);
+//}
 
 
 void setup() {
@@ -135,7 +135,8 @@ void setup() {
   // FROM CORNER PIN
   
   // put projector output size here
-  size(800, 600, P3D);
+  size(2000, 1800, P3D);
+  
 
   // put image size here
   ks = new Keystone(this);
@@ -166,21 +167,21 @@ void setup() {
   basicFont = createFont("Courier", 30);
   basicfontSmall = createFont("Courier", 15);
   
-  starsRect = loadImage("../space_background_fourtofive.jpg");
+  starsRect = loadImage("space_background_fourtofive.jpg");
   starsRect.resize(410, 328);
-  starsCirc = loadImage("../space_background_circle.png");
+  starsCirc = loadImage("space_background_circle.png");
   starsCirc.resize(132, 132);
-  orangeDial = loadImage("../orange_dial.png");
+  orangeDial = loadImage("orange_dial.png");
   orangeDial.resize(116, 84);
-  greyDial = loadImage("../grey_dial.png");
+  greyDial = loadImage("grey_dial.png");
   greyDial.resize(116, 84);
-  tealDial = loadImage("../teal_dial.png");
+  tealDial = loadImage("teal_dial.png");
   tealDial.resize(116, 84);
-  orangeCirc = loadImage("../orange_circle_hatched.png");
+  orangeCirc = loadImage("orange_circle_hatched.png");
   orangeCirc.resize(75, 75);
-  greyCirc = loadImage("../grey_circle_hatched.png");
+  greyCirc = loadImage("grey_circle_hatched.png");
   greyCirc.resize(75, 75);
-  tealCirc = loadImage("../teal_circle_hatched.png");
+  tealCirc = loadImage("teal_circle_hatched.png");
   tealCirc.resize(75, 75);
   
   mode = 0;
