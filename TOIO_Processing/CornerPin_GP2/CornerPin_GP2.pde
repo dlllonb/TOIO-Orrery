@@ -223,11 +223,11 @@ void draw() {
     
     // lines
     offscreen.stroke(darkGrey);
-    offscreen.line(xoffset1+sideLength*1/2-137,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2-137,yoffset1+sideLength*18/48);
-    offscreen.line(xoffset1+sideLength*1/2-68,yoffset1+sideLength*17/24-80,xoffset1+sideLength*1/2-68,yoffset1+sideLength*7/12);
-    offscreen.line(xoffset1+sideLength*1/2,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2,yoffset1+sideLength*18/48);
-    offscreen.line(xoffset1+sideLength*1/2+68,yoffset1+sideLength*17/24-80,xoffset1+sideLength*1/2+68,yoffset1+sideLength*7/12);
-    offscreen.line(xoffset1+sideLength*1/2+137,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2+137,yoffset1+sideLength*18/48);
+    offscreen.line(xoffset1+sideLength*1/2-137,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2-137,yoffset1+160);
+    offscreen.line(xoffset1+sideLength*1/2-68,yoffset1+sideLength*17/24-80,xoffset1+sideLength*1/2-68,yoffset1+250);
+    offscreen.line(xoffset1+sideLength*1/2,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2,yoffset1+160);
+    offscreen.line(xoffset1+sideLength*1/2+68,yoffset1+sideLength*17/24-80,xoffset1+sideLength*1/2+68,yoffset1+250);
+    offscreen.line(xoffset1+sideLength*1/2+137,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2+137,yoffset1+160);
     offscreen.noStroke();
     
   } else if (mode == 1) {
