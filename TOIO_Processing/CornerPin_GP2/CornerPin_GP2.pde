@@ -48,6 +48,10 @@ int largeSize;
 // Fonts
 PFont basicFont;
 
+// Images
+PImage starsRect;
+PImage starsCirc;
+
 // Mode
 int mode;
 
@@ -65,7 +69,7 @@ void setup() {
   darkBrown = color(92, 45, 12);
   lightGrey = color(101,116,147);
   mediumGrey = color(76, 90, 125);
-  darkGrey = color(33, 37, 46);
+  darkGrey = color(55, 66, 90);
   lightTeal = color(91, 205, 211);
   darkTeal = color(31, 161, 169);
   lightOrange = color(231, 97, 46);
@@ -82,6 +86,11 @@ void setup() {
   
   basicFont = createFont("Courier", 30); 
   
+  starsRect = loadImage("../space_background_fourtofive.jpg");
+  starsRect.resize(410, 328);
+  starsCirc = loadImage("../space_background_circle.png");
+  starsCirc.resize(132, 132);
+  
   mode = 1;
 }
 
@@ -96,13 +105,14 @@ void draw() {
   offscreen.rect(xoffset1,yoffset1,sideLength,sideLength);
   offscreen.fill(backgroundBlue);
   offscreen.rect(xoffset2,yoffset2,sideLength,sideLength);
+  offscreen.image(starsRect,xoffset2,yoffset2); 
   
   // Right Board (Orbit)
     // bottom bar
   offscreen.fill(lightGrey);
   offscreen.rect(xoffset2, yoffset2+(sideLength*4/5), sideLength, sideLength*1/5);
+  // planet spots
   offscreen.fill(mediumGrey);
-    // planet spots
   offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
   offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
   offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
@@ -147,13 +157,26 @@ void draw() {
     // EXPLORE MODE
   } else if (mode == 1) {
     // SANDBOX MODE
+    // dial boxes
     offscreen.fill(mediumGrey);
     offscreen.rect(xoffset1+sideLength*1/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
     offscreen.rect(xoffset1+sideLength*9/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
     offscreen.rect(xoffset1+sideLength*17/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
-    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*2.25, largeSize*2.25);
+    offscreen.ellipse(xoffset1+sideLength*1/6, yoffset2+sideLength*19/42, 50, 50);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset2+sideLength*19/42, 50, 50);
+    offscreen.ellipse(xoffset1+sideLength*5/6, yoffset2+sideLength*19/42, 50, 50);
+    offscreen.fill(darkGrey);
+    offscreen.arc(100, 100, 100, 100, 0, 180);
+    //offscreen.arc(xoffset1+sideLength*1/6, yoffset1+sideLength*18/42, 100, 100, PI, 0);
+    // window
+    offscreen.fill(mediumGrey);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*2.35, largeSize*2.35);
+    offscreen.fill(darkGrey);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*2, largeSize*2);
     offscreen.fill(backgroundBlue);
     offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*1.75, largeSize*1.75);
+    offscreen.image(starsCirc, xoffset1+sideLength*1/2-largeSize*1.75/2, yoffset1+sideLength*3/4-largeSize*1.75/2);
+    // lines
     offscreen.fill(lightTeal);
 }
   
