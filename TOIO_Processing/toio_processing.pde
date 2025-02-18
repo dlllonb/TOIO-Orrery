@@ -121,19 +121,25 @@ void draw() {
   //INSERT YOUR CODE HERE!
   
   // example usage for moving toio in circle
-  // Version 1: setting radius size and speed manually (speed is orbital period in milli sec)
-  /*moveCircle(cubes[0], 250, 250, 80, 10000);
-  // Version 2: setting radius size based on placed position, and speed manually (make sure to modify mat center in onPositionUpdate in Cube class)
+  // Version 1: setting radius size
+  /*moveCircle(cubes[0], 250, 250, 80);
+  // Version 2: setting radius size based on placed position (make sure to modify mat center in onPositionUpdate in Cube class)
   int radius = (int) cubes[0].radius;
-  moveCircle(cubes[0], 250, 250, radius, 10000);*/
+  moveCircle(cubes[0], 250, 250, radius);*/
   
-  // rocket pausing & info display part (kind of skeleton code for now)
+  ArrayList<int[]> system1 = new ArrayList<>();
+  system1.add(new int[]{80});
+  
+  planetImage = loadImage("space_background_circle.png");
+  PImage[] systemImage1 = {planetImage};
+  
+  mode1(cubes, system1, systemImage1);
+  /*// rocket pausing & info display part (kind of skeleton code for now)
   // assuming cubes[0] is the rocket
   Cube rocket = cubes[0];
   
   // check if the rocket is in its box and is active
   if (RocketInBox(rocket)) {
-    print("yes");
     isSimulationPaused = false;
   // case for if rocket is not in box or is not active
   } else {
@@ -157,14 +163,15 @@ void draw() {
   // case for when rocket is in box (simulation resumes normally)
   if (!isSimulationPaused) {
     for (int i = 1; i < nCubes; i++) {
-      moveCircle(cubes[i], sunX, sunY, 80, 10000);
+      moveCircle(cubes[i], sunX, sunY, 80);
     }
-  }
+  }*/
 }
 
 
-// helper function to move toio in  circle
-void moveCircle(Cube cube, int centerX, int centerY, int radius, float orbitalPeriod) {
+// helper function to move toio in  circle. Speed is determined based on T^2 = R^3 formula
+void moveCircle(Cube cube, int centerX, int centerY, int radius) {
+  float orbitalPeriod = pow(radius, 3/2) * 200;
   float angle = (millis() % orbitalPeriod) / orbitalPeriod * TWO_PI;
 
   int targetX = centerX + (int)(radius * cos(angle));
@@ -178,4 +185,43 @@ boolean RocketInBox(Cube rocket) {
   return (rocket.x >= rocketBoxX1 && rocket.x <= rocketBoxX2 &&
           rocket.y >= rocketBoxY1 && rocket.y <= rocketBoxY2 &&
           rocket.isActive);
+}
+
+// helper function where mode 1 runs when inputted a solar system data list
+void mode1(Cube[] cubes, ArrayList<int[]> systemData, PImage[] imageData) {
+  // assuming cubes[0] is the rocket
+  Cube rocket = cubes[0];
+  
+  // check if the rocket is in its box and is active
+  if (RocketInBox(rocket)) {
+    isSimulationPaused = false;
+  // case for if rocket is not in box or is not active
+  } else {
+    isSimulationPaused = true;
+
+    // check if the rocket is near a planet
+    boolean isNearPlanet = false;
+    for (int i = 1; i <= systemData.size(); i++) {
+      Cube planet = cubes[i];
+      if (rocket.distance(planet.x, planet.y) < 50) {
+        isNearPlanet = true;
+        image(imageData[i-1], sunX, sunY);
+        break;
+      }
+    }
+    if (!isNearPlanet) {
+      clear();
+    }
+  }
+
+  // case for when rocket is in box (simulation resumes normally)
+  if (!isSimulationPaused) {
+    for (int i = 1; i <= systemData.size(); i++) {
+      int[] planetData = systemData.get(i-1);
+      int radius = planetData[0];
+      // can add more variables here but only raidus for now
+
+      moveCircle(cubes[i], sunX, sunY, radius);
+    }
+  }
 }
