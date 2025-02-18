@@ -2,6 +2,8 @@ The data is a list of lists. Each list item is a planet with the data in the ord
 
 For display purposes, we probably need to do some scaling so that things actually make sense size wise. Also the star temperature needs to be colormapped.
 
+Note that the images in this folder are named using the star temperature which is sort of doubling as a system name. I did this because these planets dont have real names, just random numeric names, and this makes it easier to identify which system the planet is in without including an extra name field and also because here the temperatures are unique. 
+
 
 float(system.star_teff),          # star temp
 float(system.star_mass),          # star mass
