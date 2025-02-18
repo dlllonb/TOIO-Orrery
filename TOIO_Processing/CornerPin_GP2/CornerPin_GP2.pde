@@ -113,7 +113,7 @@ void setup() {
   tealCirc = loadImage("../teal_circle_hatched.png");
   tealCirc.resize(75, 75);
   
-  mode = 0;
+  mode = 1;
   
 }
 
