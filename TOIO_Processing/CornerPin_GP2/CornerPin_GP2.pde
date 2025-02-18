@@ -73,9 +73,9 @@ void setup() {
   yoffset1 = 45;
   xoffset2 = 545;
   yoffset2 = 45;
-  smallSize = 20;
-  mediumSize = 30;
-  largeSize = 40;
+  smallSize = 56; // scaled
+  mediumSize = 65; // scaled
+  largeSize = 75; // scaled
   
   mode = 1;
 }
@@ -96,12 +96,12 @@ void draw() {
   offscreen.fill(lightGrey);
   offscreen.rect(xoffset2, yoffset2+(sideLength*4/5), sideLength, sideLength*1/5);
   offscreen.fill(mediumGrey);
-  offscreen.ellipse(xoffset2+sideLength*1/7, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+sideLength*2/7, yoffset2+sideLength*9/10, smallSize, smallSize);
-  offscreen.ellipse(xoffset2+sideLength*3/7, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+sideLength*4/7, yoffset2+sideLength*9/10, mediumSize, mediumSize);
-  offscreen.ellipse(xoffset2+sideLength*5/7, yoffset2+sideLength*9/10, largeSize, largeSize);
-  offscreen.ellipse(xoffset2+sideLength*6/7, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.ellipse(xoffset2+30.749999981, yoffset2+sideLength*9/10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+89.268181764, yoffset2+sideLength*9/10, smallSize, smallSize);
+  offscreen.ellipse(xoffset2+152.445454453, yoffset2+sideLength*9/10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+220.281818048, yoffset2+sideLength*9/10, mediumSize, mediumSize);
+  offscreen.ellipse(xoffset2+292.777272549, yoffset2+sideLength*9/10, largeSize, largeSize);
+  offscreen.ellipse(xoffset2+332.659090706, yoffset2+sideLength*9/10, largeSize, largeSize);
   
   // Left Board (Control)
   offscreen.fill(mediumGrey);
@@ -115,9 +115,9 @@ void draw() {
     offscreen.rect(xoffset1+sideLength*1/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
     offscreen.rect(xoffset1+sideLength*9/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
     offscreen.rect(xoffset1+sideLength*17/24, yoffset1+sideLength*2/7, sideLength*1/4, sideLength*1/6, 6);
-    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*4, largeSize*4);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*2.25, largeSize*2.25);
     offscreen.fill(backgroundBlue);
-    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*3.5, largeSize*3.5);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*3/4, largeSize*1.75, largeSize*1.75);
     offscreen.fill(lightTeal);
 }
   
@@ -148,5 +148,6 @@ void keyPressed() {
     // saves the layout
     ks.save();
     break;
+
   }
 }
