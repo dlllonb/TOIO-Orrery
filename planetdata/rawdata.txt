@@ -2,6 +2,8 @@ The data is a list of lists. Each list item is a planet with the data in the ord
 
 For display purposes, we probably need to do some scaling so that things actually make sense size wise. Also the star temperature needs to be colormapped.
 
+Note that the images in this folder are named using the star temperature which is sort of doubling as a system name. I did this because these planets dont have real names, just random numeric names, and this makes it easier to identify which system the planet is in without including an extra name field and also because here the temperatures are unique. 
+
 
 float(system.star_teff),          # star temp
 float(system.star_mass),          # star mass
@@ -12,7 +14,9 @@ float(planet.planet_radius),      # planet radius
 float(planet.period),             # orbital period
 float(planet.semi_major_axis)     # orbital radius
 
-[[5553.0,
+*added list wrapper to each system*
+
+[[[5553.0,
   0.941,
   1.098,
   4,
@@ -43,8 +47,8 @@ float(planet.semi_major_axis)     # orbital radius
   0.4341878475320084,
   0.75,
   18.0811429,
-  0.13211499492880274],
- [5726.0,
+  0.13211499492880274]],
+ [[5726.0,
   1.066,
   1.483,
   3,
@@ -67,8 +71,8 @@ float(planet.semi_major_axis)     # orbital radius
   1.0591086087084456,
   1.02,
   6.33027476,
-  0.06841307230385374],
- [5680.0,
+  0.06841307230385374]],
+ [[5680.0,
   0.978,
   1.016,
   3,
@@ -91,8 +95,8 @@ float(planet.semi_major_axis)     # orbital radius
   0.40145446668453283,
   0.73,
   9.48814747,
-  0.08706405448203451],
- [5854.0,
+  0.08706405448203451]],
+ [[5854.0,
   0.951,
   1.012,
   4,
@@ -123,8 +127,8 @@ float(planet.semi_major_axis)     # orbital radius
   0.5047990916354442,
   0.79,
   6.164876,
-  0.06470652170843269],
- [4499.0,
+  0.06470652170843269]],
+ [[4499.0,
   0.643,
   0.639,
   4,
@@ -155,4 +159,4 @@ float(planet.semi_major_axis)     # orbital radius
   0.6457218890324189,
   0.86,
   4.159816554,
-  0.04369094408355136]]
+  0.04369094408355136]]]
