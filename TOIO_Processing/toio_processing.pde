@@ -86,6 +86,7 @@ int largeSize;
 // Fonts
 PFont basicFont;
 PFont basicfontSmall;
+PFont basicfontTiny;
 
 // Images
 PImage starsRect;
@@ -96,6 +97,7 @@ PImage tealDial;
 PImage orangeCirc;
 PImage greyCirc;
 PImage tealCirc;
+PImage rocketPhoto;
 
 // Mode
 int mode;
@@ -166,6 +168,7 @@ void setup() {
   
   basicFont = createFont("Courier", 30);
   basicfontSmall = createFont("Courier", 15);
+  basicfontTiny = createFont("Courier", 10);
   
   starsRect = loadImage("space_background.jpg");
   starsRect.resize(410, 410);
@@ -183,6 +186,8 @@ void setup() {
   greyCirc.resize(75, 75);
   tealCirc = loadImage("teal_circle_hatched.png");
   tealCirc.resize(75, 75);
+  rocketPhoto = loadImage("rocket.png");
+  rocketPhoto.resize(77,110);
   
   // for changing between sandbox and exploration - explore mode is 0 and sandbox is 1
   mode = 0;
@@ -295,9 +300,18 @@ void draw() {
   offscreen.ellipse(xoffset2+sideLength*11/12, yoffset2+sideLength*11/12, smallSize, smallSize);
   
   // Left Board (Control)
+    // mode control
   offscreen.fill(mediumGrey);
   offscreen.arc(xoffset1+sideLength,yoffset1+sideLength,200,200,PI,PI*1.5);
-
+    // rocket storage
+  offscreen.imageMode(CORNER);
+  offscreen.image(rocketPhoto, xoffset1+10, yoffset2+280);
+  offscreen.fill(whiteGrey);
+  offscreen.textMode(MODEL);
+  offscreen.textFont(basicfontTiny);
+  offscreen.textAlign(LEFT, CENTER);
+  offscreen.text("Rocket Storage", xoffset1+10, yoffset1+400);
+    
   if (mode == 0) {
     // EXPLORE MODE
     
@@ -322,11 +336,11 @@ void draw() {
     offscreen.rect(xoffset1+sideLength*1/2, yoffset1+sideLength*1/2, sideLength*5/6, sideLength*1/6);
     offscreen.fill(darkGrey);
     offscreen.rect(xoffset1+sideLength*1/2, yoffset1+sideLength*1/2, sideLength*4/6, sideLength*1/24);
-    offscreen.ellipse(xoffset1+sideLength*1/2-137, yoffset1+sideLength*1/2, 30, 30);
-    offscreen.ellipse(xoffset1+sideLength*1/2-68, yoffset1+sideLength*1/2, 30, 30);
-    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*1/2, 30, 30);
-    offscreen.ellipse(xoffset1+sideLength*1/2+68, yoffset1+sideLength*1/2, 30, 30);
-    offscreen.ellipse(xoffset1+sideLength*1/2+137, yoffset1+sideLength*1/2, 30, 30);
+    offscreen.ellipse(xoffset1+sideLength*1/2-137, yoffset1+sideLength*1/2, 40, 40);
+    offscreen.ellipse(xoffset1+sideLength*1/2-68, yoffset1+sideLength*1/2, 40, 40);
+    offscreen.ellipse(xoffset1+sideLength*1/2, yoffset1+sideLength*1/2, 40, 40);
+    offscreen.ellipse(xoffset1+sideLength*1/2+68, yoffset1+sideLength*1/2, 40, 40);
+    offscreen.ellipse(xoffset1+sideLength*1/2+137, yoffset1+sideLength*1/2, 40, 40);
     offscreen.rectMode(CORNER);
     
     // bubbles
