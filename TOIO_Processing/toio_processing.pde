@@ -18,6 +18,9 @@ int yOffset;
 int xOffset2;
 int yOffset2;
 
+// angle of sun for rotation
+int sunAngle = 0;
+
 // angle of the mode changing dial
 float prevModeAngle = 0;
 
@@ -579,6 +582,10 @@ void draw() {
       popMatrix();
     }
   }
+  
+  // making the sun spin
+  sunAngle += 1;
+  motorTarget(cubes[3].id, 0, 5, 0, 80, 0, 0, 0, sunAngle % 360);
 }
 
 // helper function to move toio in  circle. Speed is determined based on T^2 = R^3 formula
@@ -647,4 +654,20 @@ boolean SliderInBox(Cube slider) {
 // helper function to determine which option the dial is pointing to
 int dialChoice(Cube dial) {
   return (dial.theta % 30);
+}
+
+int systemChoice (Cube slider, int currentSystem) {
+  if (slider.x >= 95 && slider.x <= 115 && slider.y >= 250 && slider.y <= 250) {
+    return 0;
+  } else if (slider.x >= 170 && slider.x <= 190 && slider.y >= 240 && slider.y <=265) {
+    return 1;
+  } else if (slider.x >= 235 && slider.x <= 255 && slider.y >= 240 && slider.y <=265) {
+    return 2;
+  } else if (slider.x >= 305 && slider.x <= 325 && slider.y >= 240 && slider.y <=265) {
+    return 3;
+  } else if (slider.x >= 370 && slider.x <= 390 && slider.y >= 240 && slider.y <=265) {
+    return 4;
+  } else {
+    return currentSystem;
+  }
 }
