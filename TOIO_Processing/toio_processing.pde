@@ -39,6 +39,11 @@ int dial3BoxY2 = 290;
 // planet colors
 color[] planetColors  = {#8b0000, #013220, #00008b, #000000};
 
+// paused time
+long pausedTime = 0;
+long pauseStart = 0;
+boolean isPaused = false;
+
 // variable controlled by dial
 // 0: temperature, 1: type of planet, 2: eccentricity
 int dialVariable = 0;
@@ -439,6 +444,9 @@ void draw() {
     offscreen.line(xoffset1+sideLength*1/2+137,yoffset1+sideLength*7/24+80,xoffset1+sideLength*1/2+137,yoffset1+160);
     offscreen.noStroke();
     
+    // update system motion and display
+    mode1(cubes, system, images);
+    
   } else if (mode == 1) {
     // SANDBOX MODE
     
@@ -494,6 +502,8 @@ void draw() {
     offscreen.image(starsCirc, xoffset1+sideLength*1/2-largeSize*1.75/2, yoffset1+sideLength*3/4-largeSize*1.75/2);
     
 }
+
+  
   
   offscreen.endDraw();
 
@@ -503,6 +513,7 @@ void draw() {
  
   // render the scene, transformed using the corner pin surface
   surface.render(offscreen);
+  
   for (int i = 0; i < nCubes; i++) {
     cubes[i].checkActive(now);
     
@@ -519,8 +530,6 @@ void draw() {
       popMatrix();
     }
   }
-  // update system motion and display
-  mode1(cubes, system, images);
 }
 
 
@@ -528,14 +537,14 @@ void draw() {
 void moveCircle(Cube cube, int centerX, int centerY, float radius) {
   radius = radius*800;
   float orbitalPeriod = pow(radius, 3/2) * 200;
-  float angle = (millis() % orbitalPeriod) / orbitalPeriod * TWO_PI;
+  float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
 
   int targetX = centerX + (int)(radius * cos(angle));
   int targetY = centerY + (int)(radius * sin(angle));
 
   cube.velocityTarget(targetX, targetY);
-  ellipse(targetX, targetY, 220, 220);
   
+  offscreen.ellipse(cube.x+500,cube.y,30,30);
 }
 
 // helper function to determine if rocket is in box
@@ -553,9 +562,20 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
   // check if the rocket is in its box and is active
   if (RocketInBox(rocket)) {
     isSimulationPaused = false;
+    
+    if (isPaused) {
+      resumeTimer();
+    }
+    isPaused = false;
+    
   // case for if rocket is not in box or is not active
   } else {
     isSimulationPaused = true;
+    
+    if (!isPaused) {
+      pauseTimer();
+    }
+    isPaused = true;
 
     // check if the rocket is near a planet
     boolean isNearPlanet = false;
@@ -564,12 +584,16 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
       if (rocket.distance(planet.x, planet.y) < 70) {
         isNearPlanet = true;
         imageData[i-1].resize(0, 150);
-        image(imageData[i-1], 1130, 185);
+        offscreen.image(imageData[i-1], 250, 250);
         break;
       }
     }
     if (!isNearPlanet) {
       clear();
+    }
+    for (int i = 1; i <= systemData.length; i++) {
+      offscreen.fill(planetColors[i-1]);
+      offscreen.ellipse(cubes[i+1].x+500, cubes[i+1].y, 30, 30);
     }
   }
 
@@ -579,9 +603,12 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
       double[] planetData = systemData[i-1];
       double radius = planetData[7];
       float floatRadius = (float) radius;
-      fill(planetColors[i-1]);
+      offscreen.fill(planetColors[i-1]);
       moveCircle(cubes[i+1], sunX, sunY, floatRadius);
     }
+  }
+  if (systemData.length == 3) {
+      cubes[5].target(430, 430, 270);
   }
 }
 
@@ -597,6 +624,7 @@ int dialChoice(Cube dial) {
   return (dial.theta % 30);
 }
 
+// helper function for determining if slider toio is in a specific slider
 int systemChoice (Cube slider, int currentSystem) {
   if (slider.x >= 95 && slider.x <= 115 && slider.y >= 250 && slider.y <= 250) {
     return 0;
@@ -610,5 +638,21 @@ int systemChoice (Cube slider, int currentSystem) {
     return 4;
   } else {
     return currentSystem;
+  }
+}
+
+// helper function for pausing feature
+void pauseTimer() {
+  if (!isPaused) {
+    pauseStart = millis(); // Record the time when the pause starts
+    isPaused = true;
+  }
+}
+
+// helper function for pausing feature
+void resumeTimer() {
+  if (isPaused) {
+    pausedTime += millis() - pauseStart; // Add the paused duration to the total paused time
+    isPaused = false;
   }
 }
