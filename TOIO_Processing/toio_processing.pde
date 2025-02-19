@@ -12,6 +12,38 @@ int yOffset;
 int xOffset2;
 int yOffset2;
 
+// mode 1 = exploration, 2 = sandbox
+int mode = 1;
+
+// angle of the mode changing dial
+float prevModeAngle = 0;
+
+// if planets' orbits are already set in sandbox mode
+boolean[] orbiting = {false, false, false, false, false};
+
+// default values for sandbox mode planets
+// in case placed without customizing the planet
+int radius = 100;
+int temperature = 1000;
+// type 0: ..., type 1: ..., type 2: ..., ...
+int planetType = 0;
+int size = 0;
+
+// planet variables for sandbox mode
+int[][] sandboxPlanets = {{size, temperature, planetType, radius}, {size, temperature, planetType, radius},
+                          {size, temperature, planetType, radius}, {size, temperature, planetType, radius},
+                          {size, temperature, planetType, radius}};
+
+// projections for planets
+// size, temperature, type
+PImage[] projections = new PImage[5];
+
+// list of planet images indexed by type then temp modded with 250
+String[][] planetImgs = {{"planetType0Temp0.png", "planetType0Temp1.png", "planetType0Temp2.png", "planetType0Temp3.png"},
+                      {"planetType1Temp0.png", "planetType1Temp1.png", "planetType1Temp2.png", "planetType1Temp3.png"},
+                      {"planetType2Temp0.png", "planetType2Temp1.png", "planetType2Temp2.png", "planetType2Temp3.png"},
+                      {"planetType3Temp0.png", "planetType3Temp1.png", "planetType3Temp2.png", "planetType3Temp3.png"}};
+
 // rocket box coords
 int rocketBoxX1 = 90;
 int rocketBoxY1 = 100;
@@ -205,46 +237,104 @@ void draw() {
   moveCircle(cubes[0], 250, 250, radius);*/
   
   // changing systems and variables with the dial
-  // assuming cubes[1] is the dial
+  // assuming cubes[1] is the dial and cubes[2] is the slider toio
   Cube dial = cubes[1];
-
-  // case when dial is working as a slider to choose a system to display
-  if (!choosingSystems) {
-    // check if dial in slider box if not choosing systems
-    if (SliderInBox(dial)) {
-        choosingSystems = true;
+  Cube modeSwitcher = cubes[2];
+  
+  // exploration mdoe
+  if (mode == 1) {
+    // case when dial is working as a slider to choose a system to display
+    if (!choosingSystems) {
+      // check if dial in slider box if not choosing systems
+      if (SliderInBox(dial)) {
+          choosingSystems = true;
+      }
+    } else {
+      // check if dial has been moved
+      if (dial.x != prevSliderX) {
+        isSimulationPaused = true;
+        // wait to make sure the slider is done being moved
+        while (dial.x != prevSliderX) {
+          prevSliderX = dial.x;
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+              System.err.println("sleep failed");
+          }
+        }
+        // check if need to update system
+        int chosenSystem = dial.x % 50;
+        if (chosenSystem != currSystem) {
+          // getting data for new system
+          currSystem = chosenSystem;
+          double[][] system = systems[currSystem];
+          // had to add images to an ArrayList then turn that into an array because the sizes vary, maybe there's a better way?
+          ArrayList<PImage> systemImages = new ArrayList<PImage>();
+          for (int i = 1; i < system.length + 1; i++) {
+            planetImage = loadImage(system[0] + "." + i + ".png");
+            systemImages.add(planetImage);
+          }
+          PImage[] images = new PImage[systemImages.size()];
+          images = systemImages.toArray(images);
+          // update system motion and display
+          mode1(cubes, system, images);
+        }
+      }
     }
+  // sandbox mode
   } else {
-    // check if dial has been moved
-    if (dial.x != prevSliderX) {
-      isSimulationPaused = true;
-      // wait to make sure the slider is done being moved
-      while (dial.x != prevSliderX) {
-        prevSliderX = dial.x;
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            System.err.println("sleep failed");
+    for (int i = 2; i < 9; i++) {
+      Cube planet = cubes[1];
+      // if in the porthole
+      if (planet.x > 50 && planet.y > 50 && planet.x < 100 && planet.y < 100) {
+          // if dial being used to adjust a variable
+          if (Math.abs(dial.y - dial1BoxY1) < 10) {
+            // which variable the dial is controlling
+            if (Math.abs(dial.x - dial1BoxX1) < 10) {
+              // size, currently mapping 0-180 to 100-1000
+              sandboxPlanets[i - 2][0] = (int)(100 + ((dial.theta * 900) / 180));
+            } else if (Math.abs(dial.x - dial2BoxX1) < 10) {
+              // temp, currently mapping 0-180 to 100-1000
+              sandboxPlanets[i - 2][1] = (int)(100 + ((dial.theta * 900) / 180));
+            } else if (Math.abs(dial.x - dial3BoxX1) < 10) {
+              // type, currently mapping 0-180 to 0-3
+              sandboxPlanets[i - 2][0] = (int)((dial.theta * 3) / 180);
+            }
+          }
+      // planet on map
+      } else if (planet.x > 500 && planet.x < 1000){
+        // if planet orbit already set
+        if (orbiting[i - 2]) {
+          // check if planet has been picked up and moved
+          //set orbit with new radius
+        // set planet orbit
+        } else {
+         // getting distace from sun
+          sandboxPlanets[i - 2][0] = (int)Math.sqrt(Math.pow(sunX - planet.x, 2) + Math.pow(sunY - planet.y, 2));
+          moveCircle(cubes[i], sunX, sunY, sandboxPlanets[i - 2][0]);
+          orbiting[i - 2] = true;
+          // set up projection, size, temp, type
+          PImage projection = loadImage(planetImgs[sandboxPlanets[i - 2][2]][sandboxPlanets[i - 2][1] % 250]);
+          projections[i - 2] = projection;
         }
-      }
-      // check if need to update system
-      int chosenSystem = dial.x % 50;
-      if (chosenSystem != currSystem) {
-        // getting data for new system
-        currSystem = chosenSystem;
-        double[][] system = systems[currSystem];
-        // had to add images to an ArrayList then turn that into an array because the sizes vary, maybe there's a better way?
-        ArrayList<PImage> systemImages = new ArrayList<PImage>();
-        for (int i = 1; i < system.length + 1; i++) {
-          planetImage = loadImage(system[0] + "." + i + ".png");
-          systemImages.add(planetImage);
+      } else {
+        // if planet moved from orbit
+        if (orbiting[i - 2] == true) {
+          orbiting[i - 2] = false;
         }
-        PImage[] images = new PImage[systemImages.size()];
-        images = systemImages.toArray(images);
-        // update system motion and display
-        mode1(cubes, system, images);
       }
     }
+  }
+  // drawing the projections
+  for (int i = 2; i < 9; i++) {
+    if (orbiting[i - 2] == true) {
+        image(projections[i - 2], cubes[i].x, cubes[i].y);
+    }
+  }
+  // check if mode has been changed
+  if (modeSwitcher.theta < prevModeAngle - 30 || modeSwitcher.theta > prevModeAngle + 30) {
+    mode = (mode % 2) + 1;
+    prevModeAngle = modeSwitcher.theta;
   }
 }
 
