@@ -1,57 +1,16 @@
 import oscP5.*;
 import netP5.*;
 
-// cube 0 = rocket
-// cube 1 = adjustment dial
-// cube 2 = mode dial
-// cube 3 = sun
-// cubes 4-7 = planets
-
 //constants
 //The soft limit on how many toios a laptop can handle is in the 10-12 range
 //the more toios you connect to, the more difficult it becomes to sustain the connection
-int nCubes = 8;
+int nCubes = 6;
 int cubesPerHost = 12;
 int maxMotorSpeed = 115;
 int xOffset;
 int yOffset;
 int xOffset2;
 int yOffset2;
-
-// angle of sun for rotation
-int sunAngle = 0;
-
-// distance from sun
-float distance = 10;
-
-// angle of the mode changing dial
-float prevModeAngle = 0;
-
-// if planets' orbits are already set in sandbox mode
-boolean[] orbiting = {false, false, false, false, false};
-
-// default values for sandbox mode planets
-// in case placed without customizing the planet
-int radius = 100;
-int temperature = 1000;
-// type 0: rocky, type 1: gas giant, type 2: icy, type 3: water
-int planetType = 0;
-int size = 0;
-
-// planet colors
-color[] planetColors  = {#8b0000, #013220, #00008b, #000000};
-
-//
-boolean mode2MatVersion = false;
-
-// planet variables for sandbox mode
-float[][] sandboxPlanets = {{size, temperature, planetType, radius}, {size, temperature, planetType, radius},
-                          {size, temperature, planetType, radius}, {size, temperature, planetType, radius}};
-
-// paused time
-long pausedTime = 0;
-long pauseStart = 0;
-boolean isPaused = false;
 
 // rocket box coords
 int rocketBoxX1 = 75;
@@ -60,22 +19,30 @@ int rocketBoxX2 = 95;
 int rocketBoxY2 = 390;
 
 // dial 1 box coords
-int dial1BoxX1 = 100;
-int dial1BoxY1 = 190;
-int dial1BoxX2 = 140;
-int dial1BoxY2 = 230;
+int dial1BoxX1 = 10;
+int dial1BoxY1 = 300;
+int dial1BoxX2 = 20;
+int dial1BoxY2 = 290;
 
 // dial 2 box coords
-int dial2BoxX1 = 230;
-int dial2BoxY1 = 190;
-int dial2BoxX2 = 270;
-int dial2BoxY2 = 230;
+int dial2BoxX1 = 30;
+int dial2BoxY1 = 300;
+int dial2BoxX2 = 40;
+int dial2BoxY2 = 290;
 
 // dial 3 box coords
-int dial3BoxX1 = 365;
-int dial3BoxY1 = 190;
-int dial3BoxX2 = 405;
-int dial3BoxY2 = 240;
+int dial3BoxX1 = 50;
+int dial3BoxY1 = 300;
+int dial3BoxX2 = 60;
+int dial3BoxY2 = 290;
+
+// planet colors
+color[] planetColors  = {#8b0000, #013220, #00008b, #000000};
+
+// paused time
+long pausedTime = 0;
+long pauseStart = 0;
+boolean isPaused = false;
 
 // variable controlled by dial
 // 0: temperature, 1: type of planet, 2: eccentricity
@@ -334,9 +301,48 @@ void draw() {
   //INSERT YOUR CODE HERE!
   
   // changing systems and variables with the dial
-  // assuming cubes[1] is the dial to adjust planets and cubes[2] is the dial to switch modes
+  // assuming cubes[1] is the dial
   Cube dial = cubes[1];
-  Cube modeSwitcher = cubes[6];
+
+  // case when dial is working as a slider to choose a system to display
+  /*
+  if (!choosingSystems) {
+    // check if dial in slider box if not choosing systems
+    if (SliderInBox(dial)) {
+        choosingSystems = true;
+    }
+  } else {
+    // check if dial has been moved
+    if (dial.x != prevSliderX) {
+      isSimulationPaused = true;
+      // wait to make sure the slider is done being moved
+      while (dial.x != prevSliderX) {
+        prevSliderX = dial.x;
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.err.println("sleep failed");
+        }
+      }
+      // check if need to update system
+      int chosenSystem = systemChoice(dial);
+      if (chosenSystem != currSystem) {
+        // getting data for new system
+        currSystem = chosenSystem;
+        double[][] system = systems[currSystem];
+        // had to add images to an ArrayList then turn that into an array because the sizes vary, maybe there's a better way?
+        ArrayList<PImage> systemImages = new ArrayList<PImage>();
+        for (int i = 1; i < system.length + 1; i++) {
+          planetImage = loadImage(system[0] + "." + i + ".png");
+          systemImages.add(planetImage);
+        }
+        PImage[] images = new PImage[systemImages.size()];
+        images = systemImages.toArray(images);
+        // update system motion and display
+        mode1(cubes, system, images);
+      }
+    }
+  }*/
   
   currSystem = systemChoice(dial, currSystem);
   double[][] system = systems[currSystem];
@@ -495,8 +501,9 @@ void draw() {
     offscreen.imageMode(CORNER);
     offscreen.image(starsCirc, xoffset1+sideLength*1/2-largeSize*1.75/2, yoffset1+sideLength*3/4-largeSize*1.75/2);
     
-    mode2(cubes);
 }
+
+  
   
   offscreen.endDraw();
 
@@ -506,6 +513,7 @@ void draw() {
  
   // render the scene, transformed using the corner pin surface
   surface.render(offscreen);
+  
   for (int i = 0; i < nCubes; i++) {
     cubes[i].checkActive(now);
     
@@ -522,42 +530,21 @@ void draw() {
       popMatrix();
     }
   }
-  
-  // making the sun spin
-  //sunAngle += 1;
-  //motorTarget(cubes[3].id, 0, 5, 0, 80, 0, 0, 0, sunAngle % 360);
-  
-  // check if mode has been changed
-  if (Math.abs(modeSwitcher.theta - prevModeAngle) > 30) {
-    mode = (mode % 2) + 1;
-    prevModeAngle = modeSwitcher.theta;
-  }
 }
+
 
 // helper function to move toio in  circle. Speed is determined based on T^2 = R^3 formula
 void moveCircle(Cube cube, int centerX, int centerY, float radius) {
   radius = radius*800;
   float orbitalPeriod = pow(radius, 3/2) * 200;
- float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
+  float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
 
   int targetX = centerX + (int)(radius * cos(angle));
   int targetY = centerY + (int)(radius * sin(angle));
 
   cube.velocityTarget(targetX, targetY);
-  offscreen.ellipse(cube.x+500,cube.y,30,30);
   
-}
-
-void moveCircleMode2(Cube cube, int centerX, int centerY, float radius) {
-  float orbitalPeriod = pow(radius, 3/2) * 200;
-   float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
-
-  int targetX = centerX + (int)(radius * cos(angle));
-  int targetY = centerY + (int)(radius * sin(angle));
-
-  cube.velocityTarget(targetX, targetY);
   offscreen.ellipse(cube.x+500,cube.y,30,30);
-  
 }
 
 // helper function to determine if rocket is in box
@@ -573,7 +560,7 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
   Cube rocket = cubes[0];
   
   // check if the rocket is in its box and is active
-   if (RocketInBox(rocket)) {
+  if (RocketInBox(rocket)) {
     isSimulationPaused = false;
     
     if (isPaused) {
@@ -590,13 +577,45 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
     }
     isPaused = true;
 
+    // mode controloffscreen.noStroke();
+    offscreen.fill(lightGrey);
+    offscreen.rect(xoffset1,yoffset1,sideLength,sideLength);
+    offscreen.fill(backgroundBlue);
+    offscreen.fill(mediumGrey);
+    offscreen.arc(xoffset1+sideLength,yoffset1+sideLength,200,200,PI,PI*1.5);
+    // rocket storage
+    offscreen.imageMode(CORNER);
+    offscreen.image(rocketPhoto, xoffset1+10, yoffset2+280);
+    offscreen.fill(whiteGrey);
+    offscreen.textMode(MODEL);
+    offscreen.textFont(basicfontTiny);
+    offscreen.textAlign(LEFT, CENTER);
+    offscreen.text("Rocket Storage", xoffset1+10, yoffset1+400);
+        
+    // upper bar
+    offscreen.fill(mediumGrey);
+    offscreen.rect(xoffset1, yoffset1, sideLength*9/12, sideLength*1/6);
+    offscreen.ellipse(xoffset1+sideLength*9/12, yoffset1+sideLength*1/12, sideLength*1/6, sideLength*1/6);
+        
+    // text
+    offscreen.fill(whiteGrey);
+        offscreen.textFont(basicFont);
+        offscreen.textAlign(LEFT, CENTER);
+        offscreen.textMode(SHAPE);
+        offscreen.stroke(10);
+        offscreen.text("EXPLORATION MODE", xoffset1+sideLength*1/32, yoffset1+sideLength*2/28);
+        offscreen.textMode(MODEL);
+        offscreen.noStroke();
+
     // check if the rocket is near a planet
     boolean isNearPlanet = false;
     for (int i = 1; i <= systemData.length; i++) {
       Cube planet = cubes[i+1];
       if (rocket.distance(planet.x, planet.y) < 70) {
         isNearPlanet = true;
+        
         imageData[i-1].resize(0, 150);
+        offscreen.imageMode(CENTER);
         offscreen.image(imageData[i-1], 250, 250);
         break;
       }
@@ -609,7 +628,7 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
       offscreen.ellipse(cubes[i+1].x+500, cubes[i+1].y, 30, 30);
     }
   }
-  
+
   // case for when rocket is in box (simulation resumes normally)
   if (!isSimulationPaused) {
     for (int i = 1; i <= systemData.length; i++) {
@@ -625,62 +644,7 @@ void mode1(Cube[] cubes, double[][] systemData, PImage[] imageData) {
   }
 }
 
-// helper function where mode 2 works based on the customized planets
-void mode2(Cube[] cubes) {
-  Cube dial = cubes[1];
-  for (int i = 2; i < 6; i++) {
-    Cube planet = cubes[i];
-    // if in the porthole
-    if (planet.x > 170 && planet.y > 340 && planet.x < 260 && planet.y < 420 && mode2MatVersion) {
-        // if dial being used to adjust a variable
-        if (Math.abs(dial.y - dial1BoxY1) < 50) {
-          // which variable the dial is controlling
-          if (Math.abs(dial.x - dial1BoxX1) < 50) {
-            // size, currently mapping 0-180 to 10-100 (label 0.5 to 5 times the size of earth)
-            sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 90) / 180));
-          } else if (Math.abs(dial.x - dial2BoxX1) < 50) {
-            // temp, currently mapping 0-180 to 3000-11000
-            int temp = (int)(3000 + ((dial.theta * 8000) / 180));
-            sandboxPlanets[i - 2][1] = temp;
-            // mapping temp to color, red always at 255, green goes up with temp, then blue
-            int red = 255;
-            int green = 0;
-            int blue = 0;
-            if (temp < 7000) {
-              green = (int)((temp - 3000) * 255 / 4000);
-            } else {
-              blue = (int)((temp - 7000) * 255 / 4000);
-            }
-            offscreen.fill(color(red, green, blue));
-            offscreen.ellipse(sunX, sunY, 100, 100);
-          } else if (Math.abs(dial.x - dial3BoxX1) < 50) {
-            // type, currently mapping 0-180 to 0-3
-            sandboxPlanets[i - 2][2] = (int)((dial.theta * 3) / 180);
-          }
-        }
-    // planet on map
-    } else if (!mode2MatVersion){
-      // if planet orbit already set
-      
-       // getting distace from sun
-        sandboxPlanets[i - 2][0] = (float) dist(250,250,planet.x,planet.y);
-        print(i);
-        print(":");
-        println(sandboxPlanets[i - 2][0]);
-        moveCircleMode2(cubes[i], sunX, sunY, sandboxPlanets[i - 2][0]);
-        orbiting[i - 2] = true;
-        //offscreen.fill(planetColors[sandboxPlanets[i - 2][2]]);
-        offscreen.ellipse(cubes[i].x, cubes[i].y, sandboxPlanets[i - 2][0], sandboxPlanets[i - 2][0]);
-    } else {
-      // if planet moved from orbit
-      if (orbiting[i - 2] == true) {
-        orbiting[i - 2] = false;
-      }
-    }
-  }
-}
-
-// helper function for determining if slider toio is in a specific slider
+// helper function to determine if slider in box
 boolean SliderInBox(Cube slider) {
   return (slider.x >= sliderBoxX1 && slider.x <= sliderBoxX2 &&
           slider.y >= sliderBoxY1 && slider.y <= sliderBoxY2 &&
@@ -692,6 +656,7 @@ int dialChoice(Cube dial) {
   return (dial.theta % 30);
 }
 
+// helper function for determining if slider toio is in a specific slider
 int systemChoice (Cube slider, int currentSystem) {
   if (slider.x >= 95 && slider.x <= 115 && slider.y >= 250 && slider.y <= 250) {
     return 0;

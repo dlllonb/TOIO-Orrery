@@ -141,6 +141,11 @@ class Cube {
   void onButtonDown() {
     buttonDown(id);
     buttonDown = true;
+    // mode 2 mat version (0 is true, 1 is false)
+    if (id == 2 || id == 3 || id == 4 || id == 5) {
+      mode2MatVersion = !mode2MatVersion;
+    }
+    
     //insert code here
   }
   
