@@ -216,6 +216,8 @@ PImage orangeCirc;
 PImage greyCirc;
 PImage tealCirc;
 PImage rocketPhoto;
+PImage exploreIcon;
+PImage sandboxIcon;
 
 // Mode
 int mode;
@@ -266,7 +268,7 @@ void setup() {
   backgroundBlue = color(10,25,60);
   lightBrown = color(139,69,19);
   darkBrown = color(92, 45, 12);
-  whiteGrey = color(225,255,237);
+  whiteGrey = color(165, 176, 199);
   lightGrey = color(101,116,147);
   mediumGrey = color(76, 90, 125);
   darkGrey = color(55, 66, 90);
@@ -306,6 +308,10 @@ void setup() {
   tealCirc.resize(75, 75);
   rocketPhoto = loadImage("rocket.png");
   rocketPhoto.resize(77,110);
+  exploreIcon = loadImage("explore_icon.png");
+  //exploreIcon.resize(100,100);
+  sandboxIcon = loadImage("sandbox_icon.png");
+  //sandboxIcon.resize(20,20);
   
   // for changing between sandbox and exploration - explore mode is 0 and sandbox is 1
   mode = 0;
@@ -373,9 +379,6 @@ void draw() {
   offscreen.ellipse(xoffset2+sideLength*11/12, yoffset2+sideLength*11/12, smallSize, smallSize);
   
   // Left Board (Control)
-    // mode control
-  offscreen.fill(mediumGrey);
-  offscreen.arc(xoffset1+sideLength,yoffset1+sideLength,200,200,PI,PI*1.5);
     // rocket storage
   offscreen.imageMode(CORNER);
   offscreen.image(rocketPhoto, xoffset1+10, yoffset2+280);
@@ -384,6 +387,24 @@ void draw() {
   offscreen.textFont(basicfontTiny);
   offscreen.textAlign(LEFT, CENTER);
   offscreen.text("Rocket Storage", xoffset1+10, yoffset1+400);
+    // dial
+  offscreen.stroke(darkGrey);
+  offscreen.strokeWeight(3);
+  offscreen.fill(mediumGrey);
+  offscreen.arc(xoffset1+sideLength*13/14+20, yoffset1+sideLength*25/28+20, 160, 160, PI, PI*3/2);
+  offscreen.noStroke();
+  offscreen.fill(lightGrey);
+  offscreen.rect(xoffset1+sideLength*13/14, yoffset1+sideLength*25/28,20,20);
+  offscreen.fill(darkGrey);
+  offscreen.ellipse(xoffset1+sideLength*13/14, yoffset1+sideLength*25/28, 40, 40);
+  offscreen.fill(whiteGrey);
+  offscreen.textMode(MODEL);
+  offscreen.textFont(basicfontTiny);
+  offscreen.textAlign(LEFT, CENTER);
+  offscreen.text("Switch Mode", xoffset1+325, yoffset1+400);
+  offscreen.imageMode(CENTER);
+  offscreen.image(exploreIcon, xoffset1+sideLength*13/14, yoffset1+sideLength*25/28-15);
+  offscreen.image(sandboxIcon, xoffset1+sideLength*13/14-15, yoffset1+sideLength*25/28);
     
   if (mode == 0) {
     // EXPLORE MODE
