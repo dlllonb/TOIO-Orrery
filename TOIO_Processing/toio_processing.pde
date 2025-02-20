@@ -21,6 +21,14 @@ int yOffset2;
 // angle of sun for rotation
 int sunAngle = 0;
 
+// star sizes
+float[] starSizes = {0.05,0.09, 0.13,0.17,0.05,0.09, 0.13,0.17,0.05,0.09, 0.13,0.17,0.05,0.09, 0.13,0.17};
+
+// flag for radius setting
+boolean raidusFlag = false;
+
+int mode = 0;
+
 // distance from sun
 float distance = 10;
 
@@ -32,17 +40,17 @@ boolean[] orbiting = {false, false, false, false, false};
 
 // default values for sandbox mode planets
 // in case placed without customizing the planet
-int radius = 100;
+float radius = 0.13;
 int temperature = 1000;
 // type 0: rocky, type 1: gas giant, type 2: icy, type 3: water
 int planetType = 0;
-int size = 0;
+int size = 30;
 
 // planet colors
-color[] planetColors  = {#8b0000, #013220, #00008b, #000000};
+color[] planetColors  = {#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90};
 
 //
-boolean mode2MatVersion = false;
+boolean mode2MatVersion = true;
 
 // planet variables for sandbox mode
 float[][] sandboxPlanets = {{size, temperature, planetType, radius}, {size, temperature, planetType, radius},
@@ -190,6 +198,7 @@ color lightTeal;
 color darkTeal;
 color lightOrange;
 color darkOrange;
+color colorSun = #ffff00;
 
 // Dimensions
 int sideLength;
@@ -216,8 +225,6 @@ PImage orangeCirc;
 PImage greyCirc;
 PImage tealCirc;
 PImage rocketPhoto;
-PImage exploreIcon;
-PImage sandboxIcon;
 
 // Mode
 int mode;
@@ -308,10 +315,6 @@ void setup() {
   tealCirc.resize(75, 75);
   rocketPhoto = loadImage("rocket.png");
   rocketPhoto.resize(77,110);
-  exploreIcon = loadImage("explore_icon.png");
-  //exploreIcon.resize(100,100);
-  sandboxIcon = loadImage("sandbox_icon.png");
-  //sandboxIcon.resize(20,20);
   
   // for changing between sandbox and exploration - explore mode is 0 and sandbox is 1
   mode = 0;
@@ -356,6 +359,8 @@ void draw() {
   PImage[] images = new PImage[systemImages.size()];
   images = systemImages.toArray(images);
 
+  cubes[7].target(250, 250, 0);
+
   // FROM CORNER PIN
   // Draw the scene, offscreen
   offscreen.beginDraw();
@@ -387,24 +392,6 @@ void draw() {
   offscreen.textFont(basicfontTiny);
   offscreen.textAlign(LEFT, CENTER);
   offscreen.text("Rocket Storage", xoffset1+10, yoffset1+400);
-    // dial
-  offscreen.stroke(darkGrey);
-  offscreen.strokeWeight(3);
-  offscreen.fill(mediumGrey);
-  offscreen.arc(xoffset1+sideLength*13/14+20, yoffset1+sideLength*25/28+20, 160, 160, PI, PI*3/2);
-  offscreen.noStroke();
-  offscreen.fill(lightGrey);
-  offscreen.rect(xoffset1+sideLength*13/14, yoffset1+sideLength*25/28,20,20);
-  offscreen.fill(darkGrey);
-  offscreen.ellipse(xoffset1+sideLength*13/14, yoffset1+sideLength*25/28, 40, 40);
-  offscreen.fill(whiteGrey);
-  offscreen.textMode(MODEL);
-  offscreen.textFont(basicfontTiny);
-  offscreen.textAlign(LEFT, CENTER);
-  offscreen.text("Switch Mode", xoffset1+325, yoffset1+400);
-  offscreen.imageMode(CENTER);
-  offscreen.image(exploreIcon, xoffset1+sideLength*13/14, yoffset1+sideLength*25/28-15);
-  offscreen.image(sandboxIcon, xoffset1+sideLength*13/14-15, yoffset1+sideLength*25/28);
     
   if (mode == 0) {
     // EXPLORE MODE
@@ -449,6 +436,11 @@ void draw() {
     offscreen.image(greyCirc,xoffset1+sideLength*1/2, yoffset1+sideLength*7/24);
     offscreen.image(orangeCirc,xoffset1+sideLength*1/2+68, yoffset1+sideLength*17/24);
     offscreen.image(tealCirc,xoffset1+sideLength*1/2+137, yoffset1+sideLength*7/24);
+    offscreen.text("k34", xoffset1+sideLength*1/2-167, yoffset1+sideLength*7/24);
+    offscreen.text("k73", xoffset1+sideLength*1/2-98, yoffset1+sideLength*17/24);
+    offscreen.text("k17", xoffset1+sideLength*1/2-30, yoffset1+sideLength*7/24);
+    offscreen.text("k81", xoffset1+sideLength*1/2+38, yoffset1+sideLength*17/24);
+    offscreen.text("k49", xoffset1+sideLength*1/2+107, yoffset1+sideLength*7/24);
     
     // lines
     offscreen.stroke(darkGrey);
@@ -481,9 +473,9 @@ void draw() {
     offscreen.stroke(1);
     offscreen.textFont(basicfontSmall);
     offscreen.textAlign(CENTER, CENTER);
-    offscreen.text("Temperature", xoffset1+sideLength*3/16, yoffset1+sideLength*3/14);
-    offscreen.text("Planet Type", xoffset1+sideLength*2/4, yoffset1+sideLength*3/14);
-    offscreen.text("Eccentricity", xoffset1+sideLength*13/16, yoffset1+sideLength*3/14);
+    offscreen.text("Size", xoffset1+sideLength*3/16, yoffset1+sideLength*3/14);
+    offscreen.text("Sun Temp", xoffset1+sideLength*2/4, yoffset1+sideLength*3/14);
+    offscreen.text("Semi Major Axis", xoffset1+sideLength*13/16, yoffset1+sideLength*3/14);
     offscreen.noStroke();
     
     // lines
@@ -530,7 +522,7 @@ void draw() {
   for (int i = 0; i < nCubes; i++) {
     cubes[i].checkActive(now);
     
-    if (cubes[i].isActive) {
+    /*if (cubes[i].isActive) {
       pushMatrix();
       translate(cubes[i].x, cubes[i].y);
       fill(0);
@@ -541,7 +533,7 @@ void draw() {
       rect(-10, -10, 20, 20);
       line(0, 0, 20, 0);
       popMatrix();
-    }
+    }*/
   }
   
   // making the sun spin
@@ -549,9 +541,11 @@ void draw() {
   //motorTarget(cubes[3].id, 0, 5, 0, 80, 0, 0, 0, sunAngle % 360);
   
   // check if mode has been changed
-  if (Math.abs(modeSwitcher.theta - prevModeAngle) > 30) {
-    mode = (mode % 2) + 1;
-    prevModeAngle = modeSwitcher.theta;
+  // check if mode has been changed
+  if (modeSwitcher.theta > 180) {
+    mode = 0;
+  } else {
+    mode = 1;
   }
 }
 
@@ -569,15 +563,15 @@ void moveCircle(Cube cube, int centerX, int centerY, float radius) {
   
 }
 
-void moveCircleMode2(Cube cube, int centerX, int centerY, float radius) {
+void moveCircleMode2(Cube cube, int centerX, int centerY, float radius, float size) {
+  radius = radius*800;
   float orbitalPeriod = pow(radius, 3/2) * 200;
-   float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
+  float angle = ((millis()-pausedTime) % orbitalPeriod) / orbitalPeriod * TWO_PI;
 
   int targetX = centerX + (int)(radius * cos(angle));
   int targetY = centerY + (int)(radius * sin(angle));
-
   cube.velocityTarget(targetX, targetY);
-  offscreen.ellipse(cube.x+500,cube.y,30,30);
+  offscreen.ellipse(cube.x+500,cube.y,size,size);
   
 }
 
@@ -657,8 +651,18 @@ void mode2(Cube[] cubes) {
         if (Math.abs(dial.y - dial1BoxY1) < 50) {
           // which variable the dial is controlling
           if (Math.abs(dial.x - dial1BoxX1) < 50) {
-            // size, currently mapping 0-180 to 10-100 (label 0.5 to 5 times the size of earth)
-            sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 90) / 180));
+            // size, currently mapping 0-180 to 10-50 (label 0.5 to 5 times the size of earth)
+            //sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 90) / 180));
+            
+            
+            
+            
+            sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 40) / 180));
+            
+            
+            
+            
+            
           } else if (Math.abs(dial.x - dial2BoxX1) < 50) {
             // temp, currently mapping 0-180 to 3000-11000
             int temp = (int)(3000 + ((dial.theta * 8000) / 180));
@@ -673,30 +677,29 @@ void mode2(Cube[] cubes) {
               blue = (int)((temp - 7000) * 255 / 4000);
             }
             offscreen.fill(color(red, green, blue));
-            offscreen.ellipse(sunX, sunY, 100, 100);
+            colorSun = color(red, green, blue);
           } else if (Math.abs(dial.x - dial3BoxX1) < 50) {
             // type, currently mapping 0-180 to 0-3
-            sandboxPlanets[i - 2][2] = (int)((dial.theta * 3) / 180);
+            sandboxPlanets[i - 2][3] = starSizes[(int)((dial.theta * 4) / 180)];
           }
         }
+        distance = -1;
     // planet on map
     } else if (!mode2MatVersion){
       // if planet orbit already set
       
        // getting distace from sun
-        sandboxPlanets[i - 2][0] = (float) dist(250,250,planet.x,planet.y);
+        //sandboxPlanets[i - 2][3] = distance;
         print(i);
         print(":");
-        println(sandboxPlanets[i - 2][0]);
-        moveCircleMode2(cubes[i], sunX, sunY, sandboxPlanets[i - 2][0]);
+        println(sandboxPlanets[i - 2][3]);
+        offscreen.fill(planetColors[i-2]);
+        moveCircleMode2(cubes[i], sunX, sunY, sandboxPlanets[i - 2][3],sandboxPlanets[i - 2][0]);
         orbiting[i - 2] = true;
         //offscreen.fill(planetColors[sandboxPlanets[i - 2][2]]);
-        offscreen.ellipse(cubes[i].x, cubes[i].y, sandboxPlanets[i - 2][0], sandboxPlanets[i - 2][0]);
     } else {
       // if planet moved from orbit
-      if (orbiting[i - 2] == true) {
-        orbiting[i - 2] = false;
-      }
+      
     }
   }
 }
