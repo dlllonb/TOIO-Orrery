@@ -40,11 +40,11 @@ boolean[] orbiting = {false, false, false, false, false};
 
 // default values for sandbox mode planets
 // in case placed without customizing the planet
-int radius = 100;
+float radius = 0.13;
 int temperature = 1000;
 // type 0: rocky, type 1: gas giant, type 2: icy, type 3: water
 int planetType = 0;
-int size = 0;
+int size = 30;
 
 // planet colors
 color[] planetColors  = {#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90,#8b0000, #FFA500, #00008b, #90ee90};
@@ -649,8 +649,18 @@ void mode2(Cube[] cubes) {
         if (Math.abs(dial.y - dial1BoxY1) < 50) {
           // which variable the dial is controlling
           if (Math.abs(dial.x - dial1BoxX1) < 50) {
-            // size, currently mapping 0-180 to 10-100 (label 0.5 to 5 times the size of earth)
-            sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 90) / 180));
+            // size, currently mapping 0-180 to 10-50 (label 0.5 to 5 times the size of earth)
+            //sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 90) / 180));
+            
+            
+            
+            
+            sandboxPlanets[i - 2][0] = (int)(10 + ((dial.theta * 40) / 180));
+            
+            
+            
+            
+            
           } else if (Math.abs(dial.x - dial2BoxX1) < 50) {
             // temp, currently mapping 0-180 to 3000-11000
             int temp = (int)(3000 + ((dial.theta * 8000) / 180));
